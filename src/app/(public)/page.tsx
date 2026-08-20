@@ -1,0 +1,184 @@
+import prisma from "@/lib/prisma";
+import Link from "next/link";
+import { Users, HeartHandshake, School, ShieldAlert, Award, LogIn } from "lucide-react";
+
+export const dynamic = 'force-dynamic';
+
+export default async function LandingPage() {
+  const totalSiswa = await prisma.siswa.count();
+  const totalKelas = await prisma.kelas.count();
+  
+  const totalTerlambat = await prisma.keterlambatan.count();
+  const totalPelanggaran = await prisma.pelanggaran.count();
+  const totalPrestasi = await prisma.prestasi.count();
+  const layananSelesai = totalTerlambat + totalPelanggaran + totalPrestasi;
+
+  // Calculate Leaderboards
+  // Paling Berprestasi (Siswa)
+  const siswaPrestasi = await prisma.siswa.findMany({
+    orderBy: { totalPoin: 'desc' },
+    take: 1,
+    include: { kelas: true }
+  });
+
+  // Paling Banyak Melanggar (Siswa) - assumes negative points or just lowest points
+  const siswaMelanggar = await prisma.siswa.findMany({
+    orderBy: { totalPoin: 'asc' },
+    take: 1,
+    include: { kelas: true }
+  });
+
+  // Kelas Paling Berprestasi (sum of points)
+  const kelasStats = await prisma.kelas.findMany({
+    include: {
+      siswa: true
+    }
+  });
+
+  const kelasRanked = kelasStats.map(k => ({
+    ...k,
+    totalPoin: k.siswa.reduce((sum, s) => sum + s.totalPoin, 0)
+  })).sort((a, b) => b.totalPoin - a.totalPoin);
+
+  const kelasPrestasi = kelasRanked.length > 0 ? kelasRanked[0] : null;
+  const kelasMelanggar = kelasRanked.length > 0 ? kelasRanked[kelasRanked.length - 1] : null;
+
+  return (
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      {/* Header */}
+      <header className="bg-white border-b border-slate-100 py-4 px-8 flex justify-between items-center">
+        <div className="flex items-center gap-2 text-indigo-600 font-bold text-xl tracking-tight">
+          <div className="bg-indigo-100 p-2 rounded-lg">
+            <Users size={20} className="text-indigo-600" />
+          </div>
+          Sistem Guru Piket
+        </div>
+        <Link 
+          href="/login" 
+          className="flex items-center gap-2 bg-indigo-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-indigo-700 transition"
+        >
+          <LogIn size={18} />
+          Login Pegawai
+        </Link>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1 max-w-5xl w-full mx-auto px-6 py-12">
+        <div className="text-center mb-16">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-slate-800 mb-6 tracking-tight">
+            Portal Layanan Guru Piket
+          </h1>
+          <p className="text-slate-500 text-lg max-w-3xl mx-auto">
+            Platform terpadu untuk memantau kedisiplinan, mencatat absensi keterlambatan, serta mendokumentasikan pelanggaran dan prestasi siswa secara tertib dan efisien.
+          </p>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+            <div className="bg-blue-50 p-4 rounded-full mb-4">
+              <Users size={32} className="text-blue-500" />
+            </div>
+            <h3 className="text-3xl font-bold text-slate-800 mb-1">{totalSiswa}</h3>
+            <p className="text-slate-500 font-medium">Siswa Terdaftar</p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+            <div className="bg-emerald-50 p-4 rounded-full mb-4">
+              <HeartHandshake size={32} className="text-emerald-500" />
+            </div>
+            <h3 className="text-3xl font-bold text-slate-800 mb-1">{layananSelesai}</h3>
+            <p className="text-slate-500 font-medium">Layanan Selesai</p>
+          </div>
+          <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center text-center">
+            <div className="bg-orange-50 p-4 rounded-full mb-4">
+              <School size={32} className="text-orange-500" />
+            </div>
+            <h3 className="text-3xl font-bold text-slate-800 mb-1">{totalKelas}</h3>
+            <p className="text-slate-500 font-medium">Kelas Dibina</p>
+          </div>
+        </div>
+
+        {/* Leaderboards */}
+        <div className="mb-8">
+          <h2 className="text-xl font-bold text-slate-800 mb-6 border-b border-slate-200 pb-2">
+            Papan Peringkat (Bulan Ini)
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            {/* Siswa Berprestasi */}
+            <div className="bg-white rounded-xl border border-green-100 shadow-sm overflow-hidden">
+              <div className="bg-green-50/50 px-4 py-3 border-b border-green-100 flex items-center gap-2 text-green-700 font-medium">
+                <Award size={18} /> Siswa Paling Berprestasi
+              </div>
+              <div className="p-4 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 font-bold flex items-center justify-center">1</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-slate-800">{siswaPrestasi[0]?.nama || "-"}</div>
+                  <div className="text-xs text-slate-500">{siswaPrestasi[0]?.kelas.nama || "-"}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-green-600">{siswaPrestasi[0]?.totalPoin || 0}</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">POIN</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Siswa Melanggar */}
+            <div className="bg-white rounded-xl border border-red-100 shadow-sm overflow-hidden">
+              <div className="bg-red-50/50 px-4 py-3 border-b border-red-100 flex items-center gap-2 text-red-600 font-medium">
+                <ShieldAlert size={18} /> Siswa Paling Banyak Melanggar
+              </div>
+              <div className="p-4 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center">1</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-slate-800">{siswaMelanggar[0]?.nama || "-"}</div>
+                  <div className="text-xs text-slate-500">{siswaMelanggar[0]?.kelas.nama || "-"}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-red-600">{siswaMelanggar[0]?.totalPoin || 0}</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">POIN</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Kelas Berprestasi */}
+            <div className="bg-white rounded-xl border border-green-100 shadow-sm overflow-hidden">
+              <div className="bg-green-50/50 px-4 py-3 border-b border-green-100 flex items-center gap-2 text-green-700 font-medium">
+                <Award size={18} /> Kelas Paling Berprestasi
+              </div>
+              <div className="p-4 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 font-bold flex items-center justify-center">1</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-slate-800">Kelas {kelasPrestasi?.nama || "-"}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-green-600">{kelasPrestasi?.totalPoin || 0}</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">POIN TOTAL</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Kelas Melanggar */}
+            <div className="bg-white rounded-xl border border-red-100 shadow-sm overflow-hidden">
+              <div className="bg-red-50/50 px-4 py-3 border-b border-red-100 flex items-center gap-2 text-red-600 font-medium">
+                <ShieldAlert size={18} /> Kelas Paling Banyak Melanggar
+              </div>
+              <div className="p-4 flex items-center gap-4">
+                <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold flex items-center justify-center">1</div>
+                <div className="flex-1">
+                  <div className="font-semibold text-slate-800">Kelas {kelasMelanggar?.nama || "-"}</div>
+                </div>
+                <div className="text-right">
+                  <div className="font-bold text-red-600">{kelasMelanggar?.totalPoin || 0}</div>
+                  <div className="text-[10px] text-slate-400 uppercase font-semibold">POIN TOTAL</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}
