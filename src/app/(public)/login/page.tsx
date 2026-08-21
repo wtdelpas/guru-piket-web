@@ -16,9 +16,10 @@ export default async function LoginPage() {
     const userCount = await prisma.user.count();
     if (userCount === 0 && username === "admin" && password === "admin123") {
       const cookieStore = await cookies();
-      cookieStore.set("logged_in", "true");
-      cookieStore.set("peran", "Admin");
-      cookieStore.set("username", "admin");
+      const cookieOpts = { maxAge: 60 * 60 * 24 * 30, path: "/" };
+      cookieStore.set("logged_in", "true", cookieOpts);
+      cookieStore.set("peran", "Admin", cookieOpts);
+      cookieStore.set("username", "admin", cookieOpts);
       redirect("/dashboard");
     }
 
@@ -26,9 +27,10 @@ export default async function LoginPage() {
 
     if (user && user.password === password) {
       const cookieStore = await cookies();
-      cookieStore.set("logged_in", "true");
-      cookieStore.set("peran", user.peran);
-      cookieStore.set("username", user.username);
+      const cookieOpts = { maxAge: 60 * 60 * 24 * 30, path: "/" };
+      cookieStore.set("logged_in", "true", cookieOpts);
+      cookieStore.set("peran", user.peran, cookieOpts);
+      cookieStore.set("username", user.username, cookieOpts);
       redirect("/dashboard");
     } else {
       // For simplicity in this demo, we just return. In real app, we'd show error state.
@@ -82,3 +84,4 @@ export default async function LoginPage() {
     </div>
   );
 }
+

@@ -44,8 +44,8 @@ export default async function TataTertibPage() {
         </form>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-100">
               <th className="p-4 font-semibold text-slate-600 w-16">No</th>
@@ -90,3 +90,5 @@ export default async function TataTertibPage() {
     </div>
   );
 }
+
+

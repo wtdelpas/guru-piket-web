@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import RekapFilter from "@/components/RekapFilter";
+import ExportButtons from "@/components/ExportButtons";
 import { getTimezoneOffset, formatDateSync } from "@/lib/timezone";
 
 export default async function RekapTerlambatPage({
@@ -47,17 +48,39 @@ export default async function RekapTerlambatPage({
   });
   const tzOffset = await getTimezoneOffset();
 
+  const exportData = terlambatList.map((item: any) => ({
+    tanggal: formatDateSync(item.tanggal, tzOffset),
+    nama: item.siswa.nama,
+    kelas: item.siswa.kelas.nama,
+    alasan: item.alasan || '-',
+    poin: item.poin
+  }));
+
+  const exportColumns = [
+    { header: 'Tanggal & Jam', key: 'tanggal' },
+    { header: 'Nama Siswa', key: 'nama' },
+    { header: 'Kelas', key: 'kelas' },
+    { header: 'Alasan', key: 'alasan' },
+    { header: 'Poin Minus', key: (row: any) => "-" + row.poin }
+  ];
+
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8 text-slate-800">Rekap Keterlambatan</h1>
 
       <RekapFilter kelasList={kelasList} />
 
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="p-4 bg-slate-50 border-b border-slate-100">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-x-auto">
+                <div className="p-4 bg-slate-50 border-b border-slate-100 flex justify-between items-center flex-wrap gap-4">
           <h2 className="font-semibold text-slate-700">Total Terlambat: {terlambatList.length}</h2>
+          <ExportButtons 
+            title="Rekap Keterlambatan Siswa" 
+            filename="Rekap_Keterlambatan" 
+            tableData={exportData} 
+            columns={exportColumns} 
+          />
         </div>
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-100">
               <th className="p-4 font-semibold text-slate-600">Tanggal & Jam</th>
@@ -95,6 +118,9 @@ export default async function RekapTerlambatPage({
     </div>
   );
 }
+
+
+
 
 
 

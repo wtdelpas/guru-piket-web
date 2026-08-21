@@ -295,8 +295,8 @@ export default function SiswaClient({ initialSiswa, kelasList }: { initialSiswa:
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="bg-slate-50 border-b border-slate-100">
               <th className="p-4 w-12">
@@ -510,3 +510,5 @@ export default function SiswaClient({ initialSiswa, kelasList }: { initialSiswa:
   );
 
 }
+
+
