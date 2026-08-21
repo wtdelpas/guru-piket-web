@@ -30,7 +30,7 @@ export async function formatDate(date: Date) {
   const hour = localTime.getUTCHours().toString().padStart(2, "0");
   const minute = localTime.getUTCMinutes().toString().padStart(2, "0");
   
-  return ${day}// .;
+  return `${day}/${month}/${year} ${hour}.${minute}`;
 }
 
 export function formatDateSync(date: Date, offset: number) {
@@ -40,5 +40,6 @@ export function formatDateSync(date: Date, offset: number) {
   const year = localTime.getUTCFullYear();
   const hour = localTime.getUTCHours().toString().padStart(2, "0");
   const minute = localTime.getUTCMinutes().toString().padStart(2, "0");
-  return ${day}// .;
+  return `${day}/${month}/${year} ${hour}.${minute}`;
 }
+

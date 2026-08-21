@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import RekapFilter from "@/components/RekapFilter";
+import { getTimezoneOffset, formatDateSync } from "@/lib/timezone";
 
 export default async function RekapPrestasiPage({
   searchParams,
@@ -44,6 +45,7 @@ export default async function RekapPrestasiPage({
   const kelasList = await prisma.kelas.findMany({
     orderBy: { nama: "asc" },
   });
+  const tzOffset = await getTimezoneOffset();
 
   return (
     <div>
@@ -96,5 +98,6 @@ export default async function RekapPrestasiPage({
     </div>
   );
 }
+
 
 
