@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { createKeterlambatan, deleteKeterlambatan, updatePoinTerlambat } from "./actions";
+import { getDefaultDateTimeLocal, getTimezoneOffset, formatDateSync } from "@/lib/timezone";
 import { Trash2, Settings } from "lucide-react";
 import SearchableSelect from "@/components/SearchableSelect";
 
@@ -28,6 +29,8 @@ export default async function TerlambatPage() {
 
   const setting = await prisma.setting.findUnique({ where: { key: "poin_terlambat" } });
   const poinTerlambat = setting ? parseInt(setting.value) : 5;
+  const defaultWaktu = await getDefaultDateTimeLocal();
+  const tzOffset = await getTimezoneOffset();
 
   return (
     <div>
@@ -66,7 +69,7 @@ export default async function TerlambatPage() {
             <input
               type="datetime-local"
               name="waktu"
-              defaultValue={new Date(new Date().getTime() + 7 * 60 * 60 * 1000).toISOString().slice(0, 16)}
+              defaultValue={defaultWaktu}
               className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
               required
             />
@@ -111,7 +114,7 @@ export default async function TerlambatPage() {
               terlambatList.map((item) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {item.tanggal.toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {formatDateSync(item.tanggal, tzOffset)}
                   </td>
                   <td className="p-4 font-medium text-slate-800">{item.siswa.nama}</td>
                   <td className="p-4 text-slate-600">{item.siswa.kelas.nama}</td>
@@ -140,5 +143,7 @@ export default async function TerlambatPage() {
     </div>
   );
 }
+
+
 
 

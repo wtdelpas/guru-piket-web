@@ -5,10 +5,12 @@ import SearchableSelect from "@/components/SearchableSelect";
 import { Plus } from "lucide-react";
 
 export default function PelanggaranClient({ 
+  defaultWaktu,
   siswaList, 
   aturanList, 
   createAction 
 }: { 
+  defaultWaktu: string,
   siswaList: any[], 
   aturanList: any[], 
   createAction: (formData: FormData) => void 
@@ -51,7 +53,7 @@ export default function PelanggaranClient({
                   <input
                     type="datetime-local"
                     name="waktu"
-                    defaultValue={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+                    defaultValue={defaultWaktu}
                     className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
@@ -117,4 +119,5 @@ export default function PelanggaranClient({
     </>
   );
 }
+
 

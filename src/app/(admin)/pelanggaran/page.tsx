@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { createPelanggaran, deletePelanggaran } from "./actions";
 import { Trash2 } from "lucide-react";
 import PelanggaranClient from "./PelanggaranClient";
+import { getDefaultDateTimeLocal, getTimezoneOffset, formatDateSync } from "@/lib/timezone";
 
 export default async function PelanggaranPage() {
   const pelanggaranList = await prisma.pelanggaran.findMany({
@@ -21,12 +22,16 @@ export default async function PelanggaranPage() {
   const aturanList = await prisma.aturanTataTertib.findMany({
     orderBy: { deskripsi: "asc" },
   });
+  
+  const defaultWaktu = await getDefaultDateTimeLocal();
+  const tzOffset = await getTimezoneOffset();
 
   return (
     <div>
       <h1 className="text-3xl font-bold mb-8 text-slate-800">Catatan Pelanggaran</h1>
 
       <PelanggaranClient 
+        defaultWaktu={defaultWaktu}
         siswaList={siswaList.map(s => ({ value: s.id, label: `${s.nis} - ${s.nama} (${s.kelas.nama})` }))}
         aturanList={aturanList.map(a => ({ value: a.id, label: `${a.deskripsi} (-${a.poin} Poin)` }))}
         createAction={createPelanggaran}
@@ -56,7 +61,7 @@ export default async function PelanggaranPage() {
               pelanggaranList.map((item: any) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {item.tanggal.toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {formatDateSync(item.tanggal, tzOffset)}
                   </td>
                   <td className="p-4">
                     <div className="font-medium text-slate-800">{item.siswa.nama}</div>
@@ -89,4 +94,6 @@ export default async function PelanggaranPage() {
     </div>
   );
 }
+
+
 

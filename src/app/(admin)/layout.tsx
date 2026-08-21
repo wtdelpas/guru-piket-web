@@ -1,4 +1,4 @@
-import Sidebar from "@/components/Sidebar";
+import LayoutWrapper from "@/components/LayoutWrapper";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -14,12 +14,5 @@ export default async function AdminLayout({
     redirect("/login");
   }
 
-  return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar />
-      <main className="flex-1 p-8 overflow-y-auto">
-        {children}
-      </main>
-    </div>
-  );
+  return <LayoutWrapper>{children}</LayoutWrapper>;
 }

@@ -3,12 +3,12 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, Users, Clock, AlertTriangle, Trophy, LogOut, ChevronDown, ChevronRight, Database, FileText } from 'lucide-react';
+import { LayoutDashboard, Users, Clock, AlertTriangle, Trophy, LogOut, ChevronDown, ChevronRight, Database, FileText, Settings } from 'lucide-react';
 
-export default function Sidebar() {
+export default function Sidebar({ onCloseMobile }: { onCloseMobile?: () => void }) {
   const pathname = usePathname();
   
-  const isMasterDataActive = ['/siswa', '/tata-tertib', '/jenis-prestasi'].includes(pathname);
+  const isMasterDataActive = ['/siswa', '/tata-tertib', '/jenis-prestasi', '/pengaturan-waktu'].includes(pathname);
   const isRekapActive = pathname.startsWith('/rekap');
   
   const [isMasterOpen, setIsMasterOpen] = useState(isMasterDataActive);
@@ -16,7 +16,7 @@ export default function Sidebar() {
 
   // Sync state if pathname changes externally
   useEffect(() => {
-    if (['/siswa', '/tata-tertib', '/jenis-prestasi'].includes(pathname)) {
+    if (['/siswa', '/tata-tertib', '/jenis-prestasi', '/pengaturan-waktu'].includes(pathname)) {
       setIsMasterOpen(true);
     }
     if (pathname.startsWith('/rekap')) {
@@ -36,6 +36,7 @@ export default function Sidebar() {
     { name: 'Data Siswa', icon: Users, path: '/siswa' },
     { name: 'Data Tata Tertib', icon: AlertTriangle, path: '/tata-tertib' },
     { name: 'Data Jenis Prestasi', icon: Trophy, path: '/jenis-prestasi' },
+    { name: 'Pengaturan Waktu', icon: Settings, path: '/pengaturan-waktu' },
   ];
 
   const rekapMenuItems = [
@@ -61,6 +62,7 @@ export default function Sidebar() {
               <Link
                 key={dashboardItem.name}
                 href={dashboardItem.path}
+                onClick={onCloseMobile}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-indigo-600'
                 }`}
@@ -94,6 +96,7 @@ export default function Sidebar() {
                     <Link
                       key={item.name}
                       href={item.path}
+                      onClick={onCloseMobile}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm ${
                         isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-indigo-600'
                       }`}
@@ -114,6 +117,7 @@ export default function Sidebar() {
               <Link
                 key={item.name}
                 href={item.path}
+                onClick={onCloseMobile}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
                   isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-indigo-600'
                 }`}
@@ -147,6 +151,7 @@ export default function Sidebar() {
                     <Link
                       key={item.name}
                       href={item.path}
+                      onClick={onCloseMobile}
                       className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-colors text-sm ${
                         isActive ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50 hover:text-indigo-600'
                       }`}

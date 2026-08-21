@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { parseTimezoneDate } from "@/lib/timezone";
 
 export async function createKeterlambatan(formData: FormData) {
   const siswaId = formData.get("siswaId") as string;
@@ -20,7 +21,7 @@ export async function createKeterlambatan(formData: FormData) {
       poin,
     };
     if (waktuStr) {
-      data.tanggal = new Date(waktuStr + "+07:00");
+      data.tanggal = await parseTimezoneDate(waktuStr);
     }
 
     await prisma.keterlambatan.create({
@@ -67,4 +68,5 @@ export async function updatePoinTerlambat(formData: FormData) {
 
   revalidatePath("/terlambat");
 }
+
 

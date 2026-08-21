@@ -1,5 +1,6 @@
 import prisma from "@/lib/prisma";
 import { Users, AlertTriangle, Clock, Trophy } from "lucide-react";
+import { getTimezoneOffset, formatDateSync } from "@/lib/timezone";
 
 export default async function Dashboard() {
   const totalSiswa = await prisma.siswa.count();
@@ -36,6 +37,7 @@ export default async function Dashboard() {
   ].sort((a, b) => b.tanggal.getTime() - a.tanggal.getTime()).slice(0, 5);
 
   const recentActivities = allRecent;
+  const tzOffset = await getTimezoneOffset();
 
   return (
     <div>
@@ -108,7 +110,7 @@ export default async function Dashboard() {
                        act.type === 'Pelanggaran' ? `Pelanggaran: ${act.deskripsi} (-${act.poin} Poin)` : 
                        `Prestasi: ${act.deskripsi} (+${act.poin} Poin)`}
                     </p>
-                    <p className="text-[10px] text-slate-400 mt-1">{act.tanggal.toLocaleString('id-ID')}</p>
+                    <p className="text-[10px] text-slate-400 mt-1">{formatDateSync(act.tanggal, tzOffset)}</p>
                   </div>
                 </div>
               ))
@@ -119,3 +121,4 @@ export default async function Dashboard() {
     </div>
   );
 }
+

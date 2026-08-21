@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { parseTimezoneDate } from "@/lib/timezone";
 
 export async function createPelanggaran(formData: FormData) {
   const siswaId = formData.get("siswaId") as string;
@@ -52,4 +53,5 @@ export async function deletePelanggaran(id: string, siswaId: string, poin: numbe
   revalidatePath("/pelanggaran");
   revalidatePath("/siswa");
 }
+
 
