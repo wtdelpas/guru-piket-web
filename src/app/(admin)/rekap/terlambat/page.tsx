@@ -49,9 +49,9 @@ export default async function RekapTerlambatPage({
   const tzOffset = await getTimezoneOffset();
 
   const exportData = terlambatList.map((item: any) => ({
-    tanggal: formatDateSync(item.tanggal, tzOffset),
-    nama: item.siswa.nama,
-    kelas: item.siswa.kelas.nama,
+    tanggal: item?.tanggal ? formatDateSync(item.tanggal, tzOffset) : "-",
+    nama: item.siswa?.nama,
+    kelas: item.siswa?.kelas?.nama,
     alasan: item.alasan || '-',
     poin: item.poin,
     poinMinus: "-" + item.poin
@@ -101,12 +101,12 @@ export default async function RekapTerlambatPage({
               terlambatList.map((item: any) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {formatDateSync(item.tanggal, tzOffset)} <br/>
-                    <span className="text-xs text-slate-500">{item.tanggal.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                    {item?.tanggal ? formatDateSync(item.tanggal, tzOffset) : "-"} <br/>
+                    <span className="text-xs text-slate-500">{item?.tanggal?.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
                   </td>
                   <td className="p-4">
-                    <div className="font-medium text-slate-800">{item.siswa.nama}</div>
-                    <div className="text-xs text-slate-500">{item.siswa.kelas.nama}</div>
+                    <div className="font-medium text-slate-800">{item.siswa?.nama}</div>
+                    <div className="text-xs text-slate-500">{item.siswa?.kelas?.nama}</div>
                   </td>
                   <td className="p-4 text-slate-600">{item.alasan || '-'}</td>
                   <td className="p-4 text-red-600 font-medium">-{item.poin}</td>
@@ -119,6 +119,7 @@ export default async function RekapTerlambatPage({
     </div>
   );
 }
+
 
 
 

@@ -49,9 +49,9 @@ export default async function RekapPelanggaranPage({
   const tzOffset = await getTimezoneOffset();
 
   const exportData = pelanggaranList.map((item: any) => ({
-    tanggal: formatDateSync(item.tanggal, tzOffset),
-    nama: item.siswa.nama,
-    kelas: item.siswa.kelas.nama,
+    tanggal: item?.tanggal ? formatDateSync(item.tanggal, tzOffset) : "-",
+    nama: item.siswa?.nama,
+    kelas: item.siswa?.kelas?.nama,
     deskripsi: item.deskripsi,
     keterangan: item.keterangan || '-',
     tindakLanjut: item.tindakLanjut || '-',
@@ -106,11 +106,11 @@ export default async function RekapPelanggaranPage({
               pelanggaranList.map((item: any) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {formatDateSync(item.tanggal, tzOffset)}
+                    {item?.tanggal ? formatDateSync(item.tanggal, tzOffset) : "-"}
                   </td>
                   <td className="p-4">
-                    <div className="font-medium text-slate-800">{item.siswa.nama}</div>
-                    <div className="text-xs text-slate-500">{item.siswa.kelas.nama}</div>
+                    <div className="font-medium text-slate-800">{item.siswa?.nama}</div>
+                    <div className="text-xs text-slate-500">{item.siswa?.kelas?.nama}</div>
                   </td>
                   <td className="p-4 text-slate-600">{item.deskripsi}</td>
                   <td className="p-4 text-sm">
@@ -128,6 +128,7 @@ export default async function RekapPelanggaranPage({
     </div>
   );
 }
+
 
 
 
