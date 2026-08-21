@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import LayoutWrapper from "@/components/LayoutWrapper";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -16,3 +17,4 @@ export default async function AdminLayout({
 
   return <LayoutWrapper>{children}</LayoutWrapper>;
 }
+
