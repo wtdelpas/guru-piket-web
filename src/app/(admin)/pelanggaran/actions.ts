@@ -8,6 +8,7 @@ export async function createPelanggaran(formData: FormData) {
   const aturanId = formData.get("aturanId") as string;
   const keterangan = formData.get("keterangan") as string;
   const tindakLanjut = formData.get("tindakLanjut") as string;
+  const waktuStr = formData.get("waktu") as string;
 
   if (!siswaId || !aturanId) return;
 
@@ -51,3 +52,4 @@ export async function deletePelanggaran(id: string, siswaId: string, poin: numbe
   revalidatePath("/pelanggaran");
   revalidatePath("/siswa");
 }
+

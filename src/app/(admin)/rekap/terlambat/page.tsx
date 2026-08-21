@@ -75,7 +75,7 @@ export default async function RekapTerlambatPage({
               terlambatList.map((item: any) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {item.tanggal.toLocaleDateString('id-ID')} <br/>
+                    {item.tanggal.toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })} <br/>
                     <span className="text-xs text-slate-500">{item.tanggal.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
                   </td>
                   <td className="p-4">
@@ -93,3 +93,4 @@ export default async function RekapTerlambatPage({
     </div>
   );
 }
+

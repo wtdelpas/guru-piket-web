@@ -6,6 +6,7 @@ import { revalidatePath } from "next/cache";
 export async function createKeterlambatan(formData: FormData) {
   const siswaId = formData.get("siswaId") as string;
   const alasan = formData.get("alasan") as string;
+  const waktuStr = formData.get("waktu") as string;
 
   if (!siswaId) return;
 
@@ -13,12 +14,17 @@ export async function createKeterlambatan(formData: FormData) {
     const setting = await prisma.setting.findUnique({ where: { key: "poin_terlambat" } });
     const poin = setting ? parseInt(setting.value) : 5;
 
+    const data: any = {
+      siswaId,
+      alasan,
+      poin,
+    };
+    if (waktuStr) {
+      data.tanggal = new Date(waktuStr + "+07:00");
+    }
+
     await prisma.keterlambatan.create({
-      data: {
-        siswaId,
-        alasan,
-        poin,
-      },
+      data,
     });
     
     // Kurangi poin siswa karena terlambat
@@ -61,3 +67,4 @@ export async function updatePoinTerlambat(formData: FormData) {
 
   revalidatePath("/terlambat");
 }
+

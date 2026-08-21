@@ -7,6 +7,7 @@ export async function createPrestasi(formData: FormData) {
   const siswaId = formData.get("siswaId") as string;
   const aturanId = formData.get("aturanId") as string;
   const keterangan = formData.get("keterangan") as string;
+  const waktuStr = formData.get("waktu") as string;
 
   if (!siswaId || !aturanId) return;
 
@@ -49,3 +50,4 @@ export async function deletePrestasi(id: string, siswaId: string, poin: number) 
   revalidatePath("/prestasi");
   revalidatePath("/siswa");
 }
+

@@ -46,6 +46,16 @@ export default function PelanggaranClient({
               className="p-6 flex flex-col gap-4"
             >
               <div className="flex flex-col gap-4">
+                                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Tanggal & Waktu</label>
+                  <input
+                    type="datetime-local"
+                    name="waktu"
+                    defaultValue={new Date(new Date().getTime() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16)}
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Pilih Siswa</label>
                   <SearchableSelect 
@@ -107,3 +117,4 @@ export default function PelanggaranClient({
     </>
   );
 }
+

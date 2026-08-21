@@ -55,7 +55,7 @@ export default async function PrestasiPage() {
               prestasiList.map((item: any) => (
                 <tr key={item.id} className="border-b border-slate-50 last:border-b-0 hover:bg-slate-50">
                   <td className="p-4 text-slate-600">
-                    {item.tanggal.toLocaleDateString('id-ID')}
+                    {item.tanggal.toLocaleString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                   </td>
                   <td className="p-4">
                     <div className="font-medium text-slate-800">{item.siswa.nama}</div>
@@ -89,3 +89,4 @@ export default async function PrestasiPage() {
     </div>
   );
 }
+
