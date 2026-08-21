@@ -54,7 +54,8 @@ export default async function RekapPrestasiPage({
     kelas: item.siswa.kelas.nama,
     deskripsi: item.deskripsi,
     keterangan: item.keterangan || '-',
-    poin: item.poin
+    poin: item.poin,
+    poinPlus: "\+" + item.poin
   }));
 
   const exportColumns = [
@@ -63,7 +64,7 @@ export default async function RekapPrestasiPage({
     { header: 'Kelas', key: 'kelas' },
     { header: 'Prestasi', key: 'deskripsi' },
     { header: 'Keterangan', key: 'keterangan' },
-    { header: 'Poin Plus', key: (row: any) => "+" + row.poin }
+    { header: 'Poin Plus', key: 'poinPlus' }
   ];
 
   return (
@@ -123,6 +124,7 @@ export default async function RekapPrestasiPage({
     </div>
   );
 }
+
 
 
 

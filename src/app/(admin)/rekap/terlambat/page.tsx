@@ -53,7 +53,8 @@ export default async function RekapTerlambatPage({
     nama: item.siswa.nama,
     kelas: item.siswa.kelas.nama,
     alasan: item.alasan || '-',
-    poin: item.poin
+    poin: item.poin,
+    poinMinus: "-" + item.poin
   }));
 
   const exportColumns = [
@@ -61,7 +62,7 @@ export default async function RekapTerlambatPage({
     { header: 'Nama Siswa', key: 'nama' },
     { header: 'Kelas', key: 'kelas' },
     { header: 'Alasan', key: 'alasan' },
-    { header: 'Poin Minus', key: (row: any) => "-" + row.poin }
+    { header: 'Poin Minus', key: 'poinMinus' }
   ];
 
   return (
@@ -118,6 +119,7 @@ export default async function RekapTerlambatPage({
     </div>
   );
 }
+
 
 
 

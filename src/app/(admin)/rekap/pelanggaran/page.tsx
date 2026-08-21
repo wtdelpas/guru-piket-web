@@ -55,7 +55,8 @@ export default async function RekapPelanggaranPage({
     deskripsi: item.deskripsi,
     keterangan: item.keterangan || '-',
     tindakLanjut: item.tindakLanjut || '-',
-    poin: item.poin
+    poin: item.poin,
+    poinMinus: "-" + item.poin
   }));
 
   const exportColumns = [
@@ -65,7 +66,7 @@ export default async function RekapPelanggaranPage({
     { header: 'Pelanggaran', key: 'deskripsi' },
     { header: 'Keterangan', key: 'keterangan' },
     { header: 'Tindak Lanjut', key: 'tindakLanjut' },
-    { header: 'Poin Minus', key: (row: any) => "-" + row.poin }
+    { header: 'Poin Minus', key: 'poinMinus' }
   ];
 
   return (
@@ -127,6 +128,7 @@ export default async function RekapPelanggaranPage({
     </div>
   );
 }
+
 
 
 
